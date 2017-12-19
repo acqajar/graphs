@@ -22,21 +22,24 @@ $(function(){
           return `translate(${tot/10}, ${y_t/10})`
 
         })
-        .on("mouseover", function(d){
+        .on("click", function(d){
+          d3.selectAll("text.state").remove()
           d3.select(this).raise()
           .append("text")
           .attr("class", "state")
           .text(d.STATE_LABEL)
         })
-        .on("mouseout", function(d){
-          d3.selectAll("text.state").remove()
-        })
+        // .on("mouseout", function(d){
+        //   d3.selectAll("text.state").remove()
+        // })
 
 
       total_u.append("circle")
         .attr("r", function(d){
-          var tot = parseFloat(d.TOTAL_UNIT)
-          return `${tot/100}`
+          console.log("d - " + d.FT1)
+
+          var tot = parseFloat(d.FT1/d.MT1) * 10
+          return `${tot}`
           //  tot*0.1
         })
         .attr("fill-opacity", 0.1)

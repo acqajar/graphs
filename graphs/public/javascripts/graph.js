@@ -39,6 +39,7 @@ $(function(){
           return `${tot/100}`
           //  tot*0.1
         })
+        .attr("fill-opacity", 0.1)
 
 
 

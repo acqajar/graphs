@@ -5,7 +5,7 @@ $(function(){
 
 
   d3.csv("./data/eeoc.csv", function(data){
-    console.log(data)
+    // console.log(data)
 
 
 
@@ -16,10 +16,10 @@ $(function(){
       .append("g")
         .attr("class","total_unit")
         .attr("transform", function(d){
-          var tot = parseFloat(d.TOTAL_UNIT) * 4
-          var y_t = parseFloat(d.TOTAL_UNIT) *2
+          var tot = parseFloat(d.TOTAL_UNIT) * .6
+          var y_t = parseFloat(d.TOTAL_UNIT) *.2
           //  "translate(" + tot + "," + y_t + ")"
-          return `translate(${tot*0.1}, ${y_t*0.1})`
+          return `translate(${tot}, ${y_t + 100})`
 
         })
         .on("click", function(d){
@@ -56,9 +56,94 @@ $(function(){
 
 
 
+      var states = d3.nest()
+        .key(function(d){
+          return d.STATE_LABEL
+        })
+        .rollup(function(v){
+          return v.length
+        })
+        .entries(data)
+
+        // console.log(states)
+
+        var select_s = d3.select(".states")
+
+        select_s
+          .selectAll("option")
+          .data(states)
+          .enter()
+          .append("option")
+            .text(function(d){
+              return d.key + " - " + d.value
+            })
+            .attr("value", function(d){
+              return d.key
+            })
 
 
 
+
+
+            var nac2 = d3.nest()
+              .key(function(d){
+                return d.NAC2_LABEL
+              })
+              .rollup(function(v){
+                return v.length
+              })
+              .entries(data)
+
+
+              console.log(data)
+
+            var select_l = d3.select(".labels")
+
+            select_l
+              .selectAll("option")
+              .data(nac2)
+              .enter()
+              .append("option")
+                .text(function(d){
+                  return d.key + " - " + d.value
+                })
+                .attr("value", function(d){
+                  return d.key
+                })
+
+
+
+
+                select_s
+                  .on("change", function(){
+                    d3.selectAll(".total_unit")
+                      .attr("opacity", 1)
+                    var value = select_s.property("value")
+                      if(value !== "ALL"){
+                        d3.selectAll(".total_unit")
+                        .filter(function(d){
+                          console.log("val- " + value + " - states  - " + d.STATE_LABEL)
+                          return d.STATE_LABEL !== value
+                        })
+                        .attr("opacity", 0)
+                      }
+                  })
+
+
+                  select_l
+                    .on("change", function(){
+                      d3.selectAll(".total_unit")
+                        .attr("opacity", 1)
+                      var value = select_l.property("value")
+                        if(value !== "ALL"){
+                          d3.selectAll(".total_unit")
+                          .filter(function(d){
+                            console.log("val- " + value + " - nac  - " + d.NAC2_LABEL)
+                            return d.NAC2_LABEL !== value
+                          })
+                          .attr("opacity", 0)
+                        }
+                    })
 
   })
 

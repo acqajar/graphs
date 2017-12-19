@@ -29,7 +29,13 @@ $(function(){
           .attr("class", "state")
           // var score =  JSON.stringify(parseFloat(d.FT1/d.MT1))
           // .text(d.STATE_LABEL + ", " + d.NAC2_LABEL + ", " + d.FT1 + ", " + d.MT1 )
-          .text(d.STATE_LABEL + ", " + d.NAC2_LABEL + ", " + Math.round(d.FT1/d.MT1*100) + "%")
+          .text(function(d){
+            var total = parseFloat(d.MT1) + parseFloat(d.FT1)
+            var f = parseFloat(d.FT1)
+            var score = f/total
+            console.log("tot - " + total + " num - " + Math.round(score) + " - f - " + f)
+            return d.STATE_LABEL + ", " + d.NAC2_LABEL + ", " + Math.round(score*100) + "%"
+          })
 
         })
         // .on("mouseout", function(d){

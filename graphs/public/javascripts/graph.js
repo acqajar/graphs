@@ -19,7 +19,7 @@ $(function(){
           var tot = parseFloat(d.TOTAL_UNIT) * 4
           var y_t = parseFloat(d.TOTAL_UNIT) *2
           //  "translate(" + tot + "," + y_t + ")"
-          return `translate(${tot/10}, ${y_t/10})`
+          return `translate(${tot*0.1}, ${y_t*0.1})`
 
         })
         .on("click", function(d){
@@ -27,7 +27,10 @@ $(function(){
           d3.select(this).raise()
           .append("text")
           .attr("class", "state")
-          .text(d.STATE_LABEL)
+          // var score =  JSON.stringify(parseFloat(d.FT1/d.MT1))
+          // .text(d.STATE_LABEL + ", " + d.NAC2_LABEL + ", " + d.FT1 + ", " + d.MT1 )
+          .text(d.STATE_LABEL + ", " + d.NAC2_LABEL + ", " + Math.round(d.FT1/d.MT1*100) + "%")
+
         })
         // .on("mouseout", function(d){
         //   d3.selectAll("text.state").remove()

@@ -16,8 +16,8 @@ $(function(){
       .append("g")
         .attr("class","total_unit")
         .attr("transform", function(d){
-          var tot = parseFloat(d.TOTAL_UNIT)
-          var y_t = parseFloat(d.TOTAL_UNIT) +1
+          var tot = parseFloat(d.TOTAL_UNIT) * 4
+          var y_t = parseFloat(d.TOTAL_UNIT) *2
           //  "translate(" + tot + "," + y_t + ")"
           return `translate(${tot/10}, ${y_t/10})`
 

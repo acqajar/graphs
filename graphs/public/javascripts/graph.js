@@ -5,7 +5,7 @@ $(function(){
 
 
   d3.csv("./data/eeoc.csv", function(data){
-    console.log("data - " + data)
+    console.log(data)
   })
 
 

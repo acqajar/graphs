@@ -22,13 +22,11 @@ $(function(){
           return `translate(${tot}, ${y_t + 100})`
 
         })
-        .on("click", function(d){
+        .on("mouseover", function(d){
           d3.selectAll("text.state").remove()
           d3.select(this).raise()
           .append("text")
           .attr("class", "state")
-          // var score =  JSON.stringify(parseFloat(d.FT1/d.MT1))
-          // .text(d.STATE_LABEL + ", " + d.NAC2_LABEL + ", " + d.FT1 + ", " + d.MT1 )
           .text(function(d){
             var total = parseFloat(d.MT1) + parseFloat(d.FT1)
             var f = parseFloat(d.FT1)
@@ -38,9 +36,9 @@ $(function(){
           })
 
         })
-        // .on("mouseout", function(d){
-        //   d3.selectAll("text.state").remove()
-        // })
+        .on("mouseout", function(d){
+          d3.selectAll("text.state").remove()
+        })
 
 
       total_u.append("circle")
@@ -96,10 +94,6 @@ $(function(){
 
 
 
-
-
-
-
             var nac2 = d3.nest()
               .key(function(d){
                 return d.NAC2_LABEL
@@ -122,6 +116,8 @@ $(function(){
                   return d.key
                 })
 
+
+
                   select_l
                     .on("change", function(){
                       d3.selectAll(".total_unit")
@@ -136,6 +132,24 @@ $(function(){
                           .attr("opacity", 0)
                         }
                     })
+
+
+
+
+
+                                  select_s.unshift({"value": "All",
+                                    "value": d3.sum(select_s, function(d){
+                                      return d.value
+                                    })
+                                  })
+
+
+
+                                                  select_l.unshift({"value": "All",
+                                                    "value": d3.sum(select_l, function(d){
+                                                      return d.value
+                                                    })
+                                                  })
 
 
 

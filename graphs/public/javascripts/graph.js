@@ -64,11 +64,8 @@ $(function(){
           return v.length
         })
         .entries(data)
-
         // console.log(states)
-
         var select_s = d3.select(".states")
-
         select_s
           .selectAll("option")
           .data(states)
@@ -80,6 +77,24 @@ $(function(){
             .attr("value", function(d){
               return d.key
             })
+
+            select_s
+              .on("change", function(){
+                d3.selectAll(".total_unit")
+                  .attr("opacity", 1)
+                var value = select_s.property("value")
+                  if(value !== "ALL"){
+                    d3.selectAll(".total_unit")
+                    .filter(function(d){
+                      console.log("val- " + value + " - states  - " + d.STATE_LABEL)
+                      return d.STATE_LABEL !== value
+                    })
+                    .attr("opacity", 0)
+                  }
+              })
+
+
+
 
 
 
@@ -93,12 +108,8 @@ $(function(){
                 return v.length
               })
               .entries(data)
-
-
-              console.log(data)
-
+              // console.log(data)
             var select_l = d3.select(".labels")
-
             select_l
               .selectAll("option")
               .data(nac2)
@@ -110,25 +121,6 @@ $(function(){
                 .attr("value", function(d){
                   return d.key
                 })
-
-
-
-
-                select_s
-                  .on("change", function(){
-                    d3.selectAll(".total_unit")
-                      .attr("opacity", 1)
-                    var value = select_s.property("value")
-                      if(value !== "ALL"){
-                        d3.selectAll(".total_unit")
-                        .filter(function(d){
-                          console.log("val- " + value + " - states  - " + d.STATE_LABEL)
-                          return d.STATE_LABEL !== value
-                        })
-                        .attr("opacity", 0)
-                      }
-                  })
-
 
                   select_l
                     .on("change", function(){
@@ -145,6 +137,8 @@ $(function(){
                         }
                     })
 
+
+
   })
 
 
@@ -158,11 +152,5 @@ $(function(){
   //     .text(function(d){
   //       return d + ", LAKERS"
   //     })
-
-
-
-
-
-
 
 });

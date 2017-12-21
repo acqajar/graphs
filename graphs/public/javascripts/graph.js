@@ -164,13 +164,14 @@ console.log("hello")
 
 
 var margin = {top: 40, right: 20, bottom: 30, left: 40},
-    width = 960 - margin.left - margin.right,
+    width = 1200 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
-var formatPercent = d3.format(".0%");
+var formatPercent = d3.format(",.0f")
+// d3.format(".0%");
 
 var x = d3.scale.ordinal()
-    .rangeRoundBands([0, width], .1);
+    .rangeRoundBands([0, width], .2);
 
 var y = d3.scale.linear()
     .range([height, 0]);
@@ -188,7 +189,10 @@ var tip = d3.tip()
   .attr('class', 'd3-tip')
   .offset([-10, 0])
   .html(function(d) {
-    return "<strong>Frequency:</strong> <span style='color:red'>" + d.NAC2_LABEL + "</span>";
+    var total = parseFloat(d.MT1) + parseFloat(d.FT1)
+    var f = parseFloat(d.FT1)
+    var score = (f/total) *100
+    return "<strong>Frequency:</strong> <span style='color:red'>" + d.NAC2_LABEL + ", "+ Math.round(score)+ "% </span>";
   })
 
 var svg = d3.select(".svgAppend").append("svg")

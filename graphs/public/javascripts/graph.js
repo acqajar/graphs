@@ -1,7 +1,6 @@
 console.log("hello")
 
 
-$(function(){
 
 
   d3.csv("./data/eeoc.csv", function(data){
@@ -40,116 +39,211 @@ $(function(){
           d3.selectAll("text.state").remove()
         })
 
+  $(function(){
 
-      total_u.append("circle")
-        .attr("r", function(d){
-          console.log("d - " + d.FT1)
+      // total_u.append("circle")
+      //   .attr("r", function(d){
+      //     console.log("d - " + d.FT1)
+      //
+      //     var tot = parseFloat(d.FT1/d.MT1) * 10
+      //     return `${tot}`
+      //     //  tot*0.1
+      //   })
+      //   .attr("fill-opacity", 0.1)
+      //
+      //
+      //
+      //
+      // var states = d3.nest()
+      //   .key(function(d){
+      //     return d.STATE_LABEL
+      //   })
+      //   .rollup(function(v){
+      //     return v.length
+      //   })
+      //   .entries(data)
+      //   // console.log(states)
+      //   var select_s = d3.select(".states")
+      //   select_s
+      //     .selectAll("option")
+      //     .data(states)
+      //     .enter()
+      //     .append("option")
+      //       .text(function(d){
+      //         return d.key + " - " + d.value
+      //       })
+      //       .attr("value", function(d){
+      //         return d.key
+      //       })
+      //
+      //       select_s
+      //         .on("change", function(){
+      //           d3.selectAll(".total_unit")
+      //             .attr("opacity", 1)
+      //           var value = select_s.property("value")
+      //             if(value !== "ALL"){
+      //               d3.selectAll(".total_unit")
+      //               .filter(function(d){
+      //                 console.log("val- " + value + " - states  - " + d.STATE_LABEL)
+      //                 return d.STATE_LABEL !== value
+      //               })
+      //               .attr("opacity", 0)
+      //             }
+      //         })
+      //
+      //
+      //
+      //
+      //       var nac2 = d3.nest()
+      //         .key(function(d){
+      //           return d.NAC2_LABEL
+      //         })
+      //         .rollup(function(v){
+      //           return v.length
+      //         })
+      //         .entries(data)
+      //         // console.log(data)
+      //       var select_l = d3.select(".labels")
+      //       select_l
+      //         .selectAll("option")
+      //         .data(nac2)
+      //         .enter()
+      //         .append("option")
+      //           .text(function(d){
+      //             return d.key + " - " + d.value
+      //           })
+      //           .attr("value", function(d){
+      //             return d.key
+      //           })
+      //
+      //
+      //
+      //             select_l
+      //               .on("change", function(){
+      //                 d3.selectAll(".total_unit")
+      //                   .attr("opacity", 1)
+      //                 var value = select_l.property("value")
+      //                   if(value !== "ALL"){
+      //                     d3.selectAll(".total_unit")
+      //                     .filter(function(d){
+      //                       console.log("val- " + value + " - nac  - " + d.NAC2_LABEL)
+      //                       return d.NAC2_LABEL !== value
+      //                     })
+      //                     .attr("opacity", 0)
+      //                   }
+      //               })
+      //
+      //
+      //
+      //
+      //
+      //                             select_s.unshift({"value": "All",
+      //                               "value": d3.sum(select_s, function(d){
+      //                                 return d.value
+      //                               })
+      //                             })
+      //
+      //
+      //
+      //                                             select_l.unshift({"value": "All",
+      //                                               "value": d3.sum(select_l, function(d){
+      //                                                 return d.value
+      //                                               })
+      //                                             })
+      //
+      //
+      //
+      //
+      //
+      //
 
-          var tot = parseFloat(d.FT1/d.MT1) * 10
-          return `${tot}`
-          //  tot*0.1
-        })
-        .attr("fill-opacity", 0.1)
 
 
 
-
-      var states = d3.nest()
-        .key(function(d){
-          return d.STATE_LABEL
-        })
-        .rollup(function(v){
-          return v.length
-        })
-        .entries(data)
-        // console.log(states)
-        var select_s = d3.select(".states")
-        select_s
-          .selectAll("option")
-          .data(states)
-          .enter()
-          .append("option")
-            .text(function(d){
-              return d.key + " - " + d.value
-            })
-            .attr("value", function(d){
-              return d.key
-            })
-
-            select_s
-              .on("change", function(){
-                d3.selectAll(".total_unit")
-                  .attr("opacity", 1)
-                var value = select_s.property("value")
-                  if(value !== "ALL"){
-                    d3.selectAll(".total_unit")
-                    .filter(function(d){
-                      console.log("val- " + value + " - states  - " + d.STATE_LABEL)
-                      return d.STATE_LABEL !== value
-                    })
-                    .attr("opacity", 0)
-                  }
-              })
+// Bar graph implementation
 
 
+var margin = {top: 40, right: 20, bottom: 30, left: 40},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+var formatPercent = d3.format(".0%");
+
+var x = d3.scale.ordinal()
+    .rangeRoundBands([0, width], .1);
+
+var y = d3.scale.linear()
+    .range([height, 0]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom");
+
+var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left")
+    .tickFormat(formatPercent);
+
+var tip = d3.tip()
+  .attr('class', 'd3-tip')
+  .offset([-10, 0])
+  .html(function(d) {
+    return "<strong>Frequency:</strong> <span style='color:red'>" + d.NAC2_LABEL + "</span>";
+  })
+
+var svg = d3.select(".svgAppend").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+svg.call(tip);
+
+  x.domain(data.map(function(d) { return d.STATE_LABEL; }));
+  y.domain([0, d3.max(data, function(d) { return d.TOTAL_UNIT; })]);
+
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+    .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Frequency");
+
+  svg.selectAll(".bar")
+      .data(data)
+    .enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", function(d) { return x(d.STATE_LABEL); })
+      .attr("width", x.rangeBand())
+      .attr("y", function(d) { return y(d.TOTAL_UNIT); })
+      .attr("height", function(d) { return height - y(d.TOTAL_UNIT); })
+      .on('mouseover', tip.show)
+      .on('mouseout', tip.hide)
 
 
-            var nac2 = d3.nest()
-              .key(function(d){
-                return d.NAC2_LABEL
-              })
-              .rollup(function(v){
-                return v.length
-              })
-              .entries(data)
-              // console.log(data)
-            var select_l = d3.select(".labels")
-            select_l
-              .selectAll("option")
-              .data(nac2)
-              .enter()
-              .append("option")
-                .text(function(d){
-                  return d.key + " - " + d.value
-                })
-                .attr("value", function(d){
-                  return d.key
-                })
 
-
-
-                  select_l
-                    .on("change", function(){
-                      d3.selectAll(".total_unit")
-                        .attr("opacity", 1)
-                      var value = select_l.property("value")
-                        if(value !== "ALL"){
-                          d3.selectAll(".total_unit")
-                          .filter(function(d){
-                            console.log("val- " + value + " - nac  - " + d.NAC2_LABEL)
-                            return d.NAC2_LABEL !== value
-                          })
-                          .attr("opacity", 0)
-                        }
-                    })
+function type(d) {
+  d.TOTAL_UNIT = +d.TOTAL_UNIT;
+  return d;
+}
 
 
 
 
 
-                                  select_s.unshift({"value": "All",
-                                    "value": d3.sum(select_s, function(d){
-                                      return d.value
-                                    })
-                                  })
 
 
 
-                                                  select_l.unshift({"value": "All",
-                                                    "value": d3.sum(select_l, function(d){
-                                                      return d.value
-                                                    })
-                                                  })
+
+
 
 
 

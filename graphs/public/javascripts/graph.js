@@ -162,10 +162,15 @@ console.log("hello")
 
 // Bar graph implementation
 
+// .attr("fill", function(d) {
+//     return "rgb(0, 0, " + (d * 10) + ")";
+// });
+
+
 
 var margin = {top: 40, right: 20, bottom: 30, left: 40},
     width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+    height = 600 - margin.top - margin.bottom;
 
 var formatPercent = d3.format(50)
 // d3.format(",.0f")
@@ -200,7 +205,7 @@ var svg = d3.select(".svgAppend").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    .attr("transform", "translate(" + margin.left + "," + -80 + ")");
 
 svg.call(tip);
   var max = parseFloat(d3.max(data, function(d) { return d.TOTAL_UNIT; })) + 4000
@@ -209,7 +214,7 @@ svg.call(tip);
 
   svg.append("g")
       .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
+      .attr("transform", "translate(60," + height + ")")
       .call(xAxis);
 
   svg.append("g")
@@ -220,7 +225,7 @@ svg.call(tip);
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Frequency");
+      .text("Total Units");
 
   svg.selectAll(".bar")
       .data(data)

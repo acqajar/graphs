@@ -164,14 +164,15 @@ console.log("hello")
 
 
 var margin = {top: 40, right: 20, bottom: 30, left: 40},
-    width = 1200 - margin.left - margin.right,
+    width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
-var formatPercent = d3.format(",.0f")
+var formatPercent = d3.format(50)
+// d3.format(",.0f")
 // d3.format(".0%");
 
 var x = d3.scale.ordinal()
-    .rangeRoundBands([0, width], .2);
+    .rangeRoundBands([0, width], .4);
 
 var y = d3.scale.linear()
     .range([height, 0]);
@@ -183,7 +184,7 @@ var xAxis = d3.svg.axis()
 var yAxis = d3.svg.axis()
     .scale(y)
     .orient("left")
-    .tickFormat(formatPercent);
+    .ticks(10);
 
 var tip = d3.tip()
   .attr('class', 'd3-tip')
@@ -192,19 +193,19 @@ var tip = d3.tip()
     var total = parseFloat(d.MT1) + parseFloat(d.FT1)
     var f = parseFloat(d.FT1)
     var score = (f/total) *100
-    return "<strong>Frequency:</strong> <span style='color:red'>" + d.NAC2_LABEL + ", "+ Math.round(score)+ "% </span>";
+    return "<strong>State:</strong> <span style='color:red'>" + d.STATE_LABEL + ", "+ Math.round(score)+ "% </span>";
   })
 
 var svg = d3.select(".svgAppend").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
-  .append("g")
+    .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 svg.call(tip);
-
-  x.domain(data.map(function(d) { return d.STATE_LABEL; }));
-  y.domain([0, d3.max(data, function(d) { return d.TOTAL_UNIT; })]);
+  var max = parseFloat(d3.max(data, function(d) { return d.TOTAL_UNIT; })) + 4000
+  x.domain(data.map(function(d) { return d.NAC2_LABEL; }));
+  y.domain([0, max]);
 
   svg.append("g")
       .attr("class", "x axis")
@@ -223,12 +224,13 @@ svg.call(tip);
 
   svg.selectAll(".bar")
       .data(data)
-    .enter().append("rect")
+      .enter()
+      .append("rect")
       .attr("class", "bar")
-      .attr("x", function(d) { return x(d.STATE_LABEL); })
+      .attr("x", function(d) { return x(d.NAC2_LABEL); })
       .attr("width", x.rangeBand())
       .attr("y", function(d) { return y(d.TOTAL_UNIT); })
-      .attr("height", function(d) { return height - y(d.TOTAL_UNIT); })
+      .attr("height", function(d) { return height - (y(d.TOTAL_UNIT)) })
       .on('mouseover', tip.show)
       .on('mouseout', tip.hide)
 

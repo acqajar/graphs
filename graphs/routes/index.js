@@ -20,16 +20,16 @@ app.get('/', function(req, res, next) {
 });
 
 
-app.post('/upload', function (req, res, next) {
+app.post('/', function (req, res, next) {
   // Uploads a local file to the bucket
-
-  var filename = req.body.filename
-
+  var filename = req.body
+console.log("upload!")
+console.log("body - " +  filename)
   storage
     .bucket(bucketName)
     .upload(filename)
-    .then(() => {
-      console.log(`${filename} uploaded to ${bucketName}.`);
+    .then((data) => {
+      console.log(`${filename} uploaded to ${bucketName}. + ` + data);
     })
     .catch(err => {
       console.error('ERROR:', err);

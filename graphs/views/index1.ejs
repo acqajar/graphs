@@ -90,62 +90,63 @@ body {
       <p style="    text-align: center;
     margin-top: 20px;
     font-weight: 700;"> Female Senior Off & Mgrs vs Male  Senior Off & Mgrs as a Ratio</p>
-      <!-- <p id="hello">Hello</p>
-      <p id="dude"> What's up</p>
-      <p id="yes"> Nice! </p> -->
-      <select class="states" name=""></select>
-      <select class="labels" name=""></select>
 
-  <form id="file-form" action="/" method="post" enctype="multipart/form-data">
-      Upload a File:
-      <input type="file" id="myfile" name="myfile">
-      <input type="submit" id="submit" name="submit" value="Upload File Now" >
-  </form>
+      <center>
+      <blink>
+        <input type='file' name='file' id='file' />
+        <br>
+        <div id='progress' />
+      </blink>
+    </center>
 
-  <p id="status"></p>
-     <!-- <script type="text/javascript">
-     (function(){
-         var form = document.getElementById('file-form');
-         var fileSelect = document.getElementById('myfile');
-         var uploadButton = document.getElementById('submit');
-         var statusDiv = document.getElementById('status');
+    <script>
+      jQuery('#file').change(function(){
+        var file = document.getElementById('file').files[0];
+        var progress = jQuery('#progress');
 
-         form.onsubmit = function(event) {
-             event.preventDefault();
+        if(file){
+          var reader = new FileReader();
+          var size = file.size;
+          var chunk_size = Math.pow(2, 13);
+          var chunks = [];
 
-             statusDiv.innerHTML = 'Uploading.......';
-
-             // Get the files from the input
-             var files = fileSelect.files;
-
-             // Create a new FormData object.
-             var formData = new FormData();
-
-             //Grab just one file, since we are not allowing multiple file uploads
-             var file = files[0];
-
-             console.log("files - " + file.name)
-             console.log("files 1- " + file)
+          var offset = 0;
+          var bytes = 0;
 
 
-             $.ajax({
-                method: 'POST',
-                url: `/uploading`,
-                data: file,
-                processData: false,
-                success: function(data) {
-                }
-              })
+          reader.onloadend = function(e){
+            if (e.target.readyState == FileReader.DONE){
+              var chunk = e.target.result;
+              bytes += chunk.length;
 
-              // Add the file to the request.
-             formData.append('myfile', file, file.name);
+              chunks.push(chunk);
 
-         }
-     })();
-     </script> -->
-    </div>
-    <div class="col-xs-offset-1 svgAppend">
-      <!-- <svg height="600px" width="100%"></svg> -->
-    </div>
+              progress.html(chunks.length + ' chunks // ' + bytes + ' bytes...');
+
+              if((offset < size)){
+                offset += chunk_size;
+                var blob = file.slice(offset, offset + chunk_size);
+
+                reader.readAsText(blob);
+
+              } else {
+                progress.html("processing teh content...");
+
+                var content = chunks.join("");
+
+                alert("content is ready!");
+                debugger;
+              };
+            }
+
+
+
+          };
+
+          var blob = file.slice(offset, offset + chunk_size);
+          reader.readAsText(blob);
+        }
+      });
+    </script>
   </body>
 </html>

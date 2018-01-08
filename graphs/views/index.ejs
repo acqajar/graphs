@@ -100,15 +100,30 @@ body {
       Upload a File:
       <input type="file" id="myfile" name="myfile">
       <input type="submit" id="submit" name="submit" value="Upload File Now" >
+      <p class="record_reply_g"></p>
+       <div class="upload_rpogress col-xs-9"></div>
   </form>
 
   <p id="status"></p>
-     <!-- <script type="text/javascript">
+     <script type="text/javascript">
+     var total
+     var blob
+      var file
+      var files
+      var reading
+       var loaded;
      (function(){
          var form = document.getElementById('file-form');
          var fileSelect = document.getElementById('myfile');
          var uploadButton = document.getElementById('submit');
          var statusDiv = document.getElementById('status');
+         var reader = new FileReader();
+         var formData = new FormData();
+
+
+         var step = 3000//1024*1024; size of one chunk
+         var start = 0;          // starting position
+         loaded = 0;
 
          form.onsubmit = function(event) {
              event.preventDefault();
@@ -116,33 +131,71 @@ body {
              statusDiv.innerHTML = 'Uploading.......';
 
              // Get the files from the input
-             var files = fileSelect.files;
+             files = fileSelect.files;
 
              // Create a new FormData object.
-             var formData = new FormData();
 
              //Grab just one file, since we are not allowing multiple file uploads
-             var file = files[0];
+            file = files[0];
+
+              total = file.size;  // total size of file
+              blob = file.slice(start,step); //a single chunk in starting of step size
+              reading = reader.readAsBinaryString(blob);
+
 
              console.log("files - " + file.name)
              console.log("files 1- " + file)
 
+             console.log("files 1- " + blob)
 
-             $.ajax({
-                method: 'POST',
-                url: `/uploading`,
-                data: file,
-                processData: false,
-                success: function(data) {
-                }
-              })
+
+             // $.ajax({
+             //    method: 'POST',
+             //    url: `/uploading`,
+             //    data: file,
+             //    processData: false,
+             //    success: function(data) {
+             //    }
+             //  })
 
               // Add the file to the request.
+
+    reader.onload = function(e){
+        var d = {file:reader.result}
+        console.log("d - " +  d.file)
+        console.log("d - " +  d.file.size)
+        $.ajax({
+            url:"/uploading",
+            type:"POST",
+            data:d,
+
+            success: function(r) {
+              $('.record_reply_g').html(r);   //updating status in html view
+
+              loaded += step;                 //increasing loaded which is being used as start position for next chunk
+              $('.upload_rpogress').html((loaded/total) * 100);
+
+              if(loaded <= total){            // if file is not completely uploaded
+                  blob = file.slice(loaded,loaded+step);  // getting next chunk
+                  reader.readAsBinaryString(blob);        //reading it through file reader which will call onload again. So it will happen recursively until file is completely uploaded.
+              } else {                       // if file is uploaded completely
+                  loaded = total;            // just changed loaded which could be used to show status.
+              }
+          }
+
+                                 // d is the chunk got by readAsBinaryString(...)
+        }).done(function(r){           // if 'd' is uploaded successfully then ->
+
+            })
+        }
+
+
+
              formData.append('myfile', file, file.name);
 
          }
      })();
-     </script> -->
+     </script>
     </div>
     <div class="col-xs-offset-1 svgAppend">
       <!-- <svg height="600px" width="100%"></svg> -->

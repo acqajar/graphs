@@ -16,24 +16,29 @@ const bucketName = 'd3graphtest';
 
 /* GET home page. */
 app.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.render('index');
 });
 
 
-app.post('/', function (req, res, next) {
+app.post('/uploading', function (req, res, next) {
+  var arr =[]
   // Uploads a local file to the bucket
-  var filename = req.body
+  var filename = req.body.file
+  arr.push(filename)
 console.log("upload!")
-console.log("body - " +  filename)
-  storage
-    .bucket(bucketName)
-    .upload(filename)
-    .then((data) => {
-      console.log(`${filename} uploaded to ${bucketName}. + ` + data);
-    })
-    .catch(err => {
-      console.error('ERROR:', err);
-    });
+console.log("body - " +  arr)
+res.json(arr)
+  // storage
+  //   .bucket(bucketName)
+  //   .upload(filename)
+  //   .then((data) => {
+  //     console.log(`here = ` + data);
+  //
+  //     // console.log(`${filename} uploaded to ${bucketName}. + ` + data);
+  //   })
+  //   .catch(err => {
+  //     console.error('ERROR:', err);
+  //   });
 })
 
 module.exports = app;

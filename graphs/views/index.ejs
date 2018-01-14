@@ -247,11 +247,17 @@
           geographyConfig: {
               popupTemplate: function(geo, data) {
                 console.log("here - "+ data.numberOfThings)
-                  return ['<div class="hoverinfo"><strong>',
-                          'Number of things in ' + geo.properties.name,
-                          ': ' + data.electoralVotes,
-                          '</strong></div>'].join('');
+                  return '<div class="hoverinfo"><strong> Number of things in ' + geo.properties.name +
+                          ': ' + data.electoralVotes +
+                          '</strong></div>'
+
               }
           }
       });
+
+
+      // ['<div class="hoverinfo"><strong>',
+      //         'Number of things in ' + geo.properties.name,
+      //         ': ' + data.electoralVotes,
+      //         '</strong></div>'].join('');
 </script>

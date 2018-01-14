@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <meta charset="utf-8">
+
+    <title></title>
+
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.12.0/d3.min.js" type="text/javascript"></script> -->
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+
+    <script type="text/javascript" src="./javascripts/graph.js"></script>
+    <!-- <script src="https://d3js.org/d3.v4.min.js"></script> -->
+
+    <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+
+    <style media="screen">
+      text.state {
+        z-index: 99999999;
+      }
+
+      text {
+            transform: rotate(45deg) translate(-25px, 20px);
+            text-anchor: start !important;
+      }
+
+body {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.bar {
+  fill: orange;
+}
+
+.bar:hover {
+  fill: orangered ;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.d3-tip {
+  line-height: 1;
+  font-weight: bold;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+}
+    </style>
+  </head>
+  <body>
+    <div class="col-xs-12">
+      <p style="    text-align: center;
+    margin-top: 20px;
+    font-weight: 700;"> Female Senior Off & Mgrs vs Male  Senior Off & Mgrs as a Ratio</p>
+      <!-- <p id="hello">Hello</p>
+      <p id="dude"> What's up</p>
+      <p id="yes"> Nice! </p> -->
+      <select class="states" name=""></select>
+      <select class="labels" name=""></select>
+
+  <form id="file-form" action="/" method="post" enctype="multipart/form-data">
+      Upload a File:
+      <input type="file" id="myfile" name="myfile">
+      <input type="submit" id="submit" name="submit" value="Upload File Now" >
+      <p class="record_reply_g"></p>
+       <div class="upload_rpogress col-xs-9"></div>
+  </form>
+
+  <p id="status"></p>
+     <script type="text/javascript">
+     var total
+     var blob
+      var file
+      var files
+      var reading
+       var loaded;
+     (function(){
+         var form = document.getElementById('file-form');
+         var fileSelect = document.getElementById('myfile');
+         var uploadButton = document.getElementById('submit');
+         var statusDiv = document.getElementById('status');
+         var reader = new FileReader();
+         var formData = new FormData();
+
+
+         var step = 1048576// === 1mb
+         var start = 0;          // starting position
+         loaded = 0;
+
+         form.onsubmit = function(event) {
+             event.preventDefault();
+
+             statusDiv.innerHTML = 'Uploading.......';
+
+             // Get the files from the input
+             files = fileSelect.files;
+
+             // Create a new FormData object.
+
+             //Grab just one file, since we are not allowing multiple file uploads
+            file = files[0];
+
+              total = file.size;  // total size of file
+              blob = file.slice(start,step); //a single chunk in starting of step size
+              reading = reader.readAsBinaryString(blob);
+
+
+             console.log("files - " + file.name)
+             console.log("files 1- " + file)
+
+             console.log("files 1- " + blob)
+
+
+             // $.ajax({
+             //    method: 'POST',
+             //    url: `/uploading`,
+             //    data: file,
+             //    processData: false,
+             //    success: function(data) {
+             //    }
+             //  })
+
+              // Add the file to the request.
+
+    reader.onload = function(e){
+        var d = {file:reader.result}
+        console.log("d - " +  d.file)
+        console.log("d - " +  d.file.size)
+        $.ajax({
+            url:"/uploading",
+            type:"POST",
+            data:d,
+
+            success: function(r) {
+              $('.record_reply_g').html(r);   //updating status in html view
+
+              loaded += step;                 //increasing loaded which is being used as start position for next chunk
+              $('.upload_rpogress').html((loaded/total) * 100);
+
+              if(loaded <= total){            // if file is not completely uploaded
+                  blob = file.slice(loaded,loaded+step);  // getting next chunk
+                  reader.readAsBinaryString(blob);        //reading it through file reader which will call onload again. So it will happen recursively until file is completely uploaded.
+              } else {                       // if file is uploaded completely
+                  loaded = total;            // just changed loaded which could be used to show status.
+              }
+          }
+
+                                 // d is the chunk got by readAsBinaryString(...)
+        }).done(function(r){           // if 'd' is uploaded successfully then ->
+
+            })
+        }
+
+
+
+             formData.append('myfile', file, file.name);
+
+         }
+     })();
+     </script>
+    </div>
+    <div class="col-xs-offset-1 svgAppend">
+      <!-- <svg height="600px" width="100%"></svg> -->
+    </div>
+  </body>
+</html>

@@ -19,6 +19,9 @@ app.get('/', function(req, res, next) {
   res.render('index');
 });
 
+app.get('/c', function(req, res, next) {
+  res.render('indexCurrent');
+});
 
 app.post('/uploading', function (req, res, next) {
   var arr =[]

@@ -4,272 +4,347 @@ console.log("hello")
 
 
   d3.csv("./data/eeoc.csv", function(data){
-    // console.log(data)
+    console.log(data)
+    // .rollup(function(d) {
+    //  return d3.sum(d, function(g) {return g.FT1; }, function(g) {return g.TOTAL_UNIT; });
+    // })
+    var data = d3.nest()
+       .key(function(d) { return d.STATE_LABEL;})
+       .rollup(function(d) { return {
+         ft: d3.sum(d, function(g) { return g.FT1; }),
+         total: d3.sum(d, function(z) { return parseInt(z.MT1) + parseInt(z.FT1) })
+       }
+     })
+       .entries(data);
 
 
-
-    var total_u = d3.select("svg")
-      .selectAll("g")
-      .data(data)
-      .enter()
-      .append("g")
-        .attr("class","total_unit")
-        .attr("transform", function(d){
-          var tot = parseFloat(d.TOTAL_UNIT) * .6
-          var y_t = parseFloat(d.TOTAL_UNIT) *.2
-          //  "translate(" + tot + "," + y_t + ")"
-          return `translate(${tot}, ${y_t + 100})`
-
-        })
-        .on("mouseover", function(d){
-          d3.selectAll("text.state").remove()
-          d3.select(this).raise()
-          .append("text")
-          .attr("class", "state")
-          .text(function(d){
-            var total = parseFloat(d.MT1) + parseFloat(d.FT1)
-            var f = parseFloat(d.FT1)
-            var score = f/total
-            console.log("tot - " + total + " num - " + Math.round(score) + " - f - " + f)
-            return d.STATE_LABEL + ", " + d.NAC2_LABEL + ", " + Math.round(score*100) + "%"
-          })
-
-        })
-        .on("mouseout", function(d){
-          d3.selectAll("text.state").remove()
-        })
-
-  $(function(){
-
-      // total_u.append("circle")
-      //   .attr("r", function(d){
-      //     console.log("d - " + d.FT1)
-      //
-      //     var tot = parseFloat(d.FT1/d.MT1) * 10
-      //     return `${tot}`
-      //     //  tot*0.1
-      //   })
-      //   .attr("fill-opacity", 0.1)
-      //
-      //
-      //
-      //
-      // var states = d3.nest()
-      //   .key(function(d){
-      //     return d.STATE_LABEL
-      //   })
-      //   .rollup(function(v){
-      //     return v.length
-      //   })
-      //   .entries(data)
-      //   // console.log(states)
-      //   var select_s = d3.select(".states")
-      //   select_s
-      //     .selectAll("option")
-      //     .data(states)
-      //     .enter()
-      //     .append("option")
-      //       .text(function(d){
-      //         return d.key + " - " + d.value
-      //       })
-      //       .attr("value", function(d){
-      //         return d.key
-      //       })
-      //
-      //       select_s
-      //         .on("change", function(){
-      //           d3.selectAll(".total_unit")
-      //             .attr("opacity", 1)
-      //           var value = select_s.property("value")
-      //             if(value !== "ALL"){
-      //               d3.selectAll(".total_unit")
-      //               .filter(function(d){
-      //                 console.log("val- " + value + " - states  - " + d.STATE_LABEL)
-      //                 return d.STATE_LABEL !== value
-      //               })
-      //               .attr("opacity", 0)
-      //             }
-      //         })
-      //
-      //
-      //
-      //
-      //       var nac2 = d3.nest()
-      //         .key(function(d){
-      //           return d.NAC2_LABEL
-      //         })
-      //         .rollup(function(v){
-      //           return v.length
-      //         })
-      //         .entries(data)
-      //         // console.log(data)
-      //       var select_l = d3.select(".labels")
-      //       select_l
-      //         .selectAll("option")
-      //         .data(nac2)
-      //         .enter()
-      //         .append("option")
-      //           .text(function(d){
-      //             return d.key + " - " + d.value
-      //           })
-      //           .attr("value", function(d){
-      //             return d.key
-      //           })
-      //
-      //
-      //
-      //             select_l
-      //               .on("change", function(){
-      //                 d3.selectAll(".total_unit")
-      //                   .attr("opacity", 1)
-      //                 var value = select_l.property("value")
-      //                   if(value !== "ALL"){
-      //                     d3.selectAll(".total_unit")
-      //                     .filter(function(d){
-      //                       console.log("val- " + value + " - nac  - " + d.NAC2_LABEL)
-      //                       return d.NAC2_LABEL !== value
-      //                     })
-      //                     .attr("opacity", 0)
-      //                   }
-      //               })
-      //
-      //
-      //
-      //
-      //
-      //                             select_s.unshift({"value": "All",
-      //                               "value": d3.sum(select_s, function(d){
-      //                                 return d.value
-      //                               })
-      //                             })
-      //
-      //
-      //
-      //                                             select_l.unshift({"value": "All",
-      //                                               "value": d3.sum(select_l, function(d){
-      //                                                 return d.value
-      //                                               })
-      //                                             })
-      //
-      //
-      //
-      //
-      //
-      //
+       console.log(data)
 
 
+          function grabDeets(x){
+            var res;
+            data.forEach(function(d) {
+              // console.log("state - " + x)
+              // console.log("hi d - " + d.STATE_LABEL)
+              if(d.key.toString().toLowerCase()=== x.toString().toLowerCase()){
+                console.log("k val - " + (d.values.ft/d.values.total) *100)
+                var percent = (d.values.ft/d.values.total) *100
+                  res= `${percent}%`
+                }
+              })
+              return res
+            };
 
 
-// Bar graph implementation
+        var map = new Datamap({
+              element: document.getElementById('container'),
+              scope: "usa",
+              fills: {
+               'Republican': '#CC4731',
+               'Democrat': '#306596',
+               'Heavy Democrat': '#667FAF',
+               'Light Democrat': '#A9C0DE',
+               'Heavy Republican': '#CA5E5B',
+               'Light Republican': '#EAA9A8',
+               defaultFill: '#EDDC4E'
+              },
+              data: {
+                "AZ": {
+                    "fillKey": "Republican",
+                    "electoralVotes": 5,
+                    details: function(){
+                      return grabDeets("Arizona")
+                    }
+                },
+                "CO": {
+                    "fillKey": "Light Democrat",
+                    "electoralVotes": 5,
+                    details: function(){
+                      return grabDeets("Colorado")
+                    }
+                },
+                "DE": {
+                    "fillKey": "Democrat",
+                    "electoralVotes": 32,
+                    details: function(){
+                      return grabDeets("California")
+                    }
+                },
+                "FL": {
+                    "fillKey": "UNDECIDED",
+                    "electoralVotes": 29,
+                    details: function(){
+                      return grabDeets("Florida")
+                    }
+                },
+                "GA": {
+                    "fillKey": "Republican",
+                    "electoralVotes": 32,
+                    details: function(){
+                      return grabDeets("Georgia")
+                    }
+                },
+                "HI": {
+                    "fillKey": "Democrat",
+                    "electoralVotes": 32,
+                    details: function(){
+                      return grabDeets("California")
+                    }
+                },
+                "ID": {
+                    "fillKey": "Republican",
+                    "electoralVotes": 32,
+                    details: function(){
+                      return grabDeets("Idaho")
+                    }
+                },
+                "IL": {
+                    "fillKey": "Democrat",
+                    "electoralVotes": 32,
+                    details: function(){
+                      return grabDeets("Illinois")
+                    }
+                },
+                "IN": {
+                    "fillKey": "Republican",
+                    "electoralVotes": 11
+                },
+                "IA": {
+                    "fillKey": "Light Democrat",
+                    "electoralVotes": 11
+                },
+                "KS": {
+                    "fillKey": "Republican",
+                    "electoralVotes": 32
+                },
+                "KY": {
+                    "fillKey": "Republican",
+                    "electoralVotes": 32
+                },
+                "LA": {
+                    "fillKey": "Republican",
+                    "electoralVotes": 32
+                },
+                "MD": {
+                    "fillKey": "Democrat",
+                    "electoralVotes": 32
+                },
+                "ME": {
+                    "fillKey": "Democrat",
+                    "electoralVotes": 32
+                },
+                "MA": {
+                    "fillKey": "Democrat",
+                    "electoralVotes": 32
+                },
+                "MN": {
+                    "fillKey": "Democrat",
+                    "electoralVotes": 32
+                },
+                "MI": {
+                    "fillKey": "Democrat",
+                    "electoralVotes": 32
+                },
+                "MS": {
+                    "fillKey": "Republican",
+                    "electoralVotes": 32
+                },
+                "MO": {
+                    "fillKey": "Republican",
+                    "electoralVotes": 13
+                },
+                "MT": {
+                    "fillKey": "Republican",
+                    "electoralVotes": 32
+                },
+                "NC": {
+                    "fillKey": "Light Republican",
+                    "electoralVotes": 32
+                },
+                "NE": {
+                    "fillKey": "Republican",
+                    "electoralVotes": 32
+                },
+                "NV": {
+                    "fillKey": "Heavy Democrat",
+                    "electoralVotes": 32
+                },
+                "NH": {
+                    "fillKey": "Light Democrat",
+                    "electoralVotes": 32
+                },
+                "NJ": {
+                    "fillKey": "Democrat",
+                    "electoralVotes": 32
+                },
+                "NY": {
+                    "fillKey": "Democrat",
+                    "electoralVotes": 32
+                },
+                "ND": {
+                    "fillKey": "Republican",
+                    "electoralVotes": 32
+                },
+                "NM": {
+                    "fillKey": "Democrat",
+                    "electoralVotes": 32
+                },
+                "OH": {
+                    "fillKey": "UNDECIDED",
+                    "electoralVotes": 32,
+                    details: function(){
+                      return grabDeets("Ohio")
+                    }
+                },
+                "OK": {
+                    "fillKey": "Republican",
+                    "electoralVotes": 32,
+                    details: function(){
+                      return grabDeets("Oklahoma")
+                    }
+                },
+                "OR": {
+                    "fillKey": "Democrat",
+                    "electoralVotes": 32,
+                    details: function(){
+                      return grabDeets("Oregon")
+                    }
+                },
+                "PA": {
+                    "fillKey": "Democrat",
+                    "electoralVotes": 32,
+                    details: function(){
+                      return grabDeets("Pensylvannia")
+                    }
+                },
+                "RI": {
+                    "fillKey": "Democrat",
+                    "electoralVotes": 32,
+                    details: function(){
+                      return grabDeets("Rhode Island")
+                    }
+                },
+                "SC": {
+                    "fillKey": "Republican",
+                    "electoralVotes": 32,
+                    details: function(){
+                      return grabDeets("South Carolina")
+                    }
+                },
+                "SD": {
+                    "fillKey": "Republican",
+                    "electoralVotes": 32,
+                    details: function(){
+                      return grabDeets("South Dakota")
+                    }
+                },
+                "TN": {
+                    "fillKey": "Republican",
+                    "electoralVotes": 32,
+                    details: function(){
+                      return grabDeets("Tennessee")
+                    }
+                },
+                "TX": {
+                    "fillKey": "Republican",
+                    "electoralVotes": 32,
+                    details: function(){
+                      return grabDeets("Texas")
+                    }
+                },
+                "UT": {
+                    "fillKey": "Republican",
+                    "electoralVotes": 32,
+                    details: function(){
+                      return grabDeets("Utah")
+                    }
+                },
+                "WI": {
+                    "fillKey": "Democrat",
+                    "electoralVotes": 32,
+                    details: function(){
+                      return grabDeets("Wisconsin")
+                    }
+                },
+                "VA": {
+                    "fillKey": "Light Democrat",
+                    "electoralVotes": 32,
+                    details: function(){
+                      return grabDeets("Virginia")
+                    }
+                },
+                "VT": {
+                    "fillKey": "Democrat",
+                    "electoralVotes": 32,
+                    details: function(){
+                      return grabDeets("California")
+                    }
+                },
+                "WA": {
+                    "fillKey": "Democrat",
+                    "electoralVotes": 32,
+                    details: function(){
+                      return grabDeets("Washington")
+                    }
+                },
+                "WV": {
+                    "fillKey": "Republican",
+                    "electoralVotes": 32,
+                    details: function(){
+                      return grabDeets("California")
+                    }
+                },
+                "WY": {
+                    "fillKey": "Republican",
+                    "electoralVotes": 32,
+                    details: function(){
+                      return grabDeets("Wyoming")
+                    }
+                },
+                "CA": {
+                    "fillKey": "Democrat",
+                    "electoralVotes": 32,
+                    "details": grabDeets("California")
+                },
+                "CT": {
+                    "fillKey": "Democrat",
+                    "electoralVotes": 32,
+                    details: function(){
+                      return grabDeets("Conneticut")
+                    }
+                },
+                "AK": {
+                    "fillKey": "Republican",
+                    "electoralVotes": 32,
+                    details: function(){
+                      return grabDeets("Arkansas")
+                    }
+                },
+                "AR": {
+                    "fillKey": "Republican",
+                    "electoralVotes": 32,
+                    details: function(){
+                      return grabDeets("Arizona")
+                    }
+                },
+                "AL": {
+                    "fillKey": "Republican",
+                    "electoralVotes": 32,
+                    details: function(){
+                      return grabDeets("Alabama")
+                    }
+                }
+              },
+              geographyConfig: {
+                  popupTemplate: function(geo, data) {
+                    console.log("deeets" + data.details)
+                      return '<div class="hoverinfo"><strong> Number of things in ' + geo.properties.name +
+                              ': ' + data.electoralVotes +
+                              '</strong><p>Hey there: </p>'+ data.details +'</div>'
 
-// .attr("fill", function(d) {
-//     return "rgb(0, 0, " + (d * 10) + ")";
-// });
+                  }
+              }
+          });
 
-
-
-var margin = {top: 40, right: 20, bottom: 30, left: 40},
-    width = 960 - margin.left - margin.right,
-    height = 600 - margin.top - margin.bottom;
-
-var formatPercent = d3.format(50)
-// d3.format(",.0f")
-// d3.format(".0%");
-
-var x = d3.scale.ordinal()
-    .rangeRoundBands([0, width], .4);
-
-var y = d3.scale.linear()
-    .range([height, 0]);
-
-var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom");
-
-var yAxis = d3.svg.axis()
-    .scale(y)
-    .orient("left")
-    .ticks(10);
-
-var tip = d3.tip()
-  .attr('class', 'd3-tip')
-  .offset([-10, 0])
-  .html(function(d) {
-    var total = parseFloat(d.MT1) + parseFloat(d.FT1)
-    var f = parseFloat(d.FT1)
-    var score = (f/total) *100
-    return "<strong>State:</strong> <span style='color:red'>" + d.STATE_LABEL + ", "+ Math.round(score)+ "% </span>";
-  })
-
-var svg = d3.select(".svgAppend").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform", "translate(" + margin.left + "," + -80 + ")");
-
-svg.call(tip);
-  var max = parseFloat(d3.max(data, function(d) { return d.TOTAL_UNIT; })) + 4000
-  x.domain(data.map(function(d) { return d.NAC2_LABEL; }));
-  y.domain([0, max]);
-
-  svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(60," + height + ")")
-      .call(xAxis);
-
-  svg.append("g")
-      .attr("class", "y axis")
-      .call(yAxis)
-    .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text("Total Units");
-
-  svg.selectAll(".bar")
-      .data(data)
-      .enter()
-      .append("rect")
-      .attr("class", "bar")
-      .attr("x", function(d) { return x(d.NAC2_LABEL); })
-      .attr("width", x.rangeBand())
-      .attr("y", function(d) { return y(d.TOTAL_UNIT); })
-      .attr("height", function(d) { return height - (y(d.TOTAL_UNIT)) })
-      .on('mouseover', tip.show)
-      .on('mouseout', tip.hide)
-
-
-
-function type(d) {
-  d.TOTAL_UNIT = +d.TOTAL_UNIT;
-  return d;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-  })
-
-
-
-
-  // d3.select(".col-xs-12")
-  //   .selectAll("p")
-  //   .data(["hi", "dude","go", "Kobe Bryant","Shaq","Los Angeles"])
-  //   .enter()
-  //   .append("p")
-  //     .text(function(d){
-  //       return d + ", LAKERS"
-  //     })
 
 });

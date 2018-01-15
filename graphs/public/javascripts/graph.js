@@ -12,6 +12,7 @@ console.log("hello")
        .key(function(d) { return d.STATE_LABEL;})
        .rollup(function(d) { return {
          ft: d3.sum(d, function(g) { return g.FT1; }),
+         bl: d3.sum(d, function(g) { return g.BLKT1; }),
          total: d3.sum(d, function(z) { return parseInt(z.MT1) + parseInt(z.FT1) })
        }
      })
@@ -22,12 +23,14 @@ console.log("hello")
 
 
           function grabDeets(x){
-            var res;
+            var res = []
             data.forEach(function(d) {
               if(d.key.toString().toLowerCase()=== x.toString().toLowerCase()){
                 // console.log("k val - " + d.key)
-                var percent = Math.round((d.values.ft/d.values.total) *100)
-                  res= `${percent}%`
+                var percentF = Math.round((d.values.ft/d.values.total) *100)
+                var percentA = Math.round((d.values.bl/d.values.total) *100)
+                  res.push(`${percentF}%`)
+                  res.push(`${percentA}%`)
                 }
               })
               return res
@@ -303,7 +306,9 @@ console.log("hello")
                       return '<div class="hoverinfo"><strong>'
                               + geo.properties.name +
                               // ': ' + data.electoralVotes +
-                              '</strong><p>Percentage Women (ft1/total): </p>'+ data.details +'</div>'
+                              '</strong><p>Percentage Women (ft1/total): </p>'
+                              + data.details[0] +
+                              '<p> African-American</p>' + data.details[1] + '</div>'
 
                   }
               }

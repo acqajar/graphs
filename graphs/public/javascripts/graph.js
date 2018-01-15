@@ -24,11 +24,9 @@ console.log("hello")
           function grabDeets(x){
             var res;
             data.forEach(function(d) {
-              // console.log("state - " + x)
-              // console.log("hi d - " + d.STATE_LABEL)
               if(d.key.toString().toLowerCase()=== x.toString().toLowerCase()){
-                console.log("k val - " + (d.values.ft/d.values.total) *100)
-                var percent = (d.values.ft/d.values.total) *100
+                // console.log("k val - " + d.key)
+                var percent = Math.round((d.values.ft/d.values.total) *100)
                   res= `${percent}%`
                 }
               })
@@ -52,254 +50,227 @@ console.log("hello")
                 "AZ": {
                     "fillKey": "Republican",
                     "electoralVotes": 5,
-                    details: function(){
-                      return grabDeets("Arizona")
-                    }
+                    "details": grabDeets("Arizona")
                 },
                 "CO": {
                     "fillKey": "Light Democrat",
                     "electoralVotes": 5,
-                    details: function(){
-                      return grabDeets("Colorado")
-                    }
+                    "details": grabDeets("Colorado")
                 },
                 "DE": {
                     "fillKey": "Democrat",
                     "electoralVotes": 32,
-                    details: function(){
-                      return grabDeets("California")
-                    }
+                    "details": grabDeets("Delaware")
                 },
                 "FL": {
                     "fillKey": "UNDECIDED",
                     "electoralVotes": 29,
-                    details: function(){
-                      return grabDeets("Florida")
-                    }
+                    "details": grabDeets("Florida")
                 },
                 "GA": {
                     "fillKey": "Republican",
                     "electoralVotes": 32,
-                    details: function(){
-                      return grabDeets("Georgia")
-                    }
+                    "details": grabDeets("Georgia")
                 },
                 "HI": {
                     "fillKey": "Democrat",
                     "electoralVotes": 32,
-                    details: function(){
-                      return grabDeets("California")
-                    }
+                    "details": grabDeets("Hawaii")
                 },
                 "ID": {
                     "fillKey": "Republican",
                     "electoralVotes": 32,
-                    details: function(){
-                      return grabDeets("Idaho")
-                    }
+                    "details": grabDeets("Idaho")
                 },
                 "IL": {
                     "fillKey": "Democrat",
                     "electoralVotes": 32,
-                    details: function(){
-                      return grabDeets("Illinois")
-                    }
+                    "details": grabDeets("Illinois")
                 },
                 "IN": {
                     "fillKey": "Republican",
-                    "electoralVotes": 11
+                    "electoralVotes": 11,
+                    "details": grabDeets("Indiana")
                 },
                 "IA": {
                     "fillKey": "Light Democrat",
-                    "electoralVotes": 11
+                    "electoralVotes": 11,
+                    "details": grabDeets("Iowa")
                 },
                 "KS": {
                     "fillKey": "Republican",
-                    "electoralVotes": 32
+                    "electoralVotes": 32,
+                    "details": grabDeets("Kansas")
                 },
                 "KY": {
                     "fillKey": "Republican",
-                    "electoralVotes": 32
+                    "electoralVotes": 32,
+                    "details": grabDeets("Kentucky")
                 },
                 "LA": {
                     "fillKey": "Republican",
-                    "electoralVotes": 32
+                    "electoralVotes": 32,
+                    "details": grabDeets("Louisiana")
                 },
                 "MD": {
                     "fillKey": "Democrat",
-                    "electoralVotes": 32
+                    "electoralVotes": 32,
+                    "details": grabDeets("Maryland")
                 },
                 "ME": {
                     "fillKey": "Democrat",
-                    "electoralVotes": 32
+                    "electoralVotes": 32,
+                    "details": grabDeets("Maine")
                 },
                 "MA": {
                     "fillKey": "Democrat",
-                    "electoralVotes": 32
+                    "electoralVotes": 32,
+                    "details": grabDeets("Massachusetts")
                 },
                 "MN": {
                     "fillKey": "Democrat",
-                    "electoralVotes": 32
+                    "electoralVotes": 32,
+                    "details": grabDeets("Minnesota")
                 },
                 "MI": {
                     "fillKey": "Democrat",
-                    "electoralVotes": 32
+                    "electoralVotes": 32,
+                    "details": grabDeets("Michigan")
                 },
                 "MS": {
                     "fillKey": "Republican",
-                    "electoralVotes": 32
+                    "electoralVotes": 32,
+                    "details": grabDeets("Mississippi")
                 },
                 "MO": {
                     "fillKey": "Republican",
-                    "electoralVotes": 13
+                    "electoralVotes": 13,
+                    "details": grabDeets("Missouri")
                 },
                 "MT": {
                     "fillKey": "Republican",
-                    "electoralVotes": 32
+                    "electoralVotes": 32,
+                    "details": grabDeets("Montana")
                 },
                 "NC": {
                     "fillKey": "Light Republican",
-                    "electoralVotes": 32
+                    "electoralVotes": 32,
+                    "details": grabDeets("North Carolina")
                 },
                 "NE": {
                     "fillKey": "Republican",
-                    "electoralVotes": 32
+                    "electoralVotes": 32,
+                    "details": grabDeets("Nebraska")
                 },
                 "NV": {
                     "fillKey": "Heavy Democrat",
-                    "electoralVotes": 32
+                    "electoralVotes": 32,
+                    "details": grabDeets("Nevada")
                 },
                 "NH": {
                     "fillKey": "Light Democrat",
-                    "electoralVotes": 32
+                    "electoralVotes": 32,
+                    "details": grabDeets("New Hampshire")
                 },
                 "NJ": {
                     "fillKey": "Democrat",
-                    "electoralVotes": 32
+                    "electoralVotes": 32,
+                    "details": grabDeets("New Jersey")
                 },
                 "NY": {
                     "fillKey": "Democrat",
-                    "electoralVotes": 32
+                    "electoralVotes": 32,
+                    "details": grabDeets("New York")
                 },
                 "ND": {
                     "fillKey": "Republican",
-                    "electoralVotes": 32
+                    "electoralVotes": 32,
+                    "details": grabDeets("North Dakota")
                 },
                 "NM": {
                     "fillKey": "Democrat",
-                    "electoralVotes": 32
+                    "electoralVotes": 32,
+                    "details": grabDeets("New Mexico")
                 },
                 "OH": {
                     "fillKey": "UNDECIDED",
                     "electoralVotes": 32,
-                    details: function(){
-                      return grabDeets("Ohio")
-                    }
+                    "details": grabDeets("Ohio")
                 },
                 "OK": {
                     "fillKey": "Republican",
                     "electoralVotes": 32,
-                    details: function(){
-                      return grabDeets("Oklahoma")
-                    }
+                    "details": grabDeets("Oklahoma")
                 },
                 "OR": {
                     "fillKey": "Democrat",
                     "electoralVotes": 32,
-                    details: function(){
-                      return grabDeets("Oregon")
-                    }
+                    "details": grabDeets("Oregon")
                 },
                 "PA": {
                     "fillKey": "Democrat",
                     "electoralVotes": 32,
-                    details: function(){
-                      return grabDeets("Pensylvannia")
-                    }
+                    "details": grabDeets("Pennsylvania")
                 },
                 "RI": {
                     "fillKey": "Democrat",
                     "electoralVotes": 32,
-                    details: function(){
-                      return grabDeets("Rhode Island")
-                    }
+                    "details": grabDeets("Rhode Island")
                 },
                 "SC": {
                     "fillKey": "Republican",
                     "electoralVotes": 32,
-                    details: function(){
-                      return grabDeets("South Carolina")
-                    }
+                    "details": grabDeets("New Mexico")
                 },
                 "SD": {
                     "fillKey": "Republican",
                     "electoralVotes": 32,
-                    details: function(){
-                      return grabDeets("South Dakota")
-                    }
+                    "details": grabDeets("South Dakota")
                 },
                 "TN": {
                     "fillKey": "Republican",
                     "electoralVotes": 32,
-                    details: function(){
-                      return grabDeets("Tennessee")
-                    }
+                    "details": grabDeets("Tennessee")
                 },
                 "TX": {
                     "fillKey": "Republican",
                     "electoralVotes": 32,
-                    details: function(){
-                      return grabDeets("Texas")
-                    }
+                    "details": grabDeets("Texas")
                 },
                 "UT": {
                     "fillKey": "Republican",
                     "electoralVotes": 32,
-                    details: function(){
-                      return grabDeets("Utah")
-                    }
+                    "details": grabDeets("Utah")
                 },
                 "WI": {
                     "fillKey": "Democrat",
                     "electoralVotes": 32,
-                    details: function(){
-                      return grabDeets("Wisconsin")
-                    }
+                    "details": grabDeets("Wisconsin")
                 },
                 "VA": {
                     "fillKey": "Light Democrat",
                     "electoralVotes": 32,
-                    details: function(){
-                      return grabDeets("Virginia")
-                    }
+                    "details": grabDeets("Virginia")
                 },
                 "VT": {
                     "fillKey": "Democrat",
                     "electoralVotes": 32,
-                    details: function(){
-                      return grabDeets("California")
-                    }
+                    "details": grabDeets("Vermont")
                 },
                 "WA": {
                     "fillKey": "Democrat",
                     "electoralVotes": 32,
-                    details: function(){
-                      return grabDeets("Washington")
-                    }
+                    "details": grabDeets("Washington")
                 },
                 "WV": {
                     "fillKey": "Republican",
                     "electoralVotes": 32,
-                    details: function(){
-                      return grabDeets("California")
-                    }
+                    "details": grabDeets("West Virginia")
                 },
                 "WY": {
                     "fillKey": "Republican",
                     "electoralVotes": 32,
-                    details: function(){
-                      return grabDeets("Wyoming")
-                    }
+                    "details": grabDeets("Wyoming")
                 },
                 "CA": {
                     "fillKey": "Democrat",
@@ -309,38 +280,30 @@ console.log("hello")
                 "CT": {
                     "fillKey": "Democrat",
                     "electoralVotes": 32,
-                    details: function(){
-                      return grabDeets("Conneticut")
-                    }
+                    "details": grabDeets("Connecticut")
                 },
                 "AK": {
                     "fillKey": "Republican",
                     "electoralVotes": 32,
-                    details: function(){
-                      return grabDeets("Arkansas")
-                    }
+                    "details": grabDeets("Arkansas")
                 },
                 "AR": {
                     "fillKey": "Republican",
                     "electoralVotes": 32,
-                    details: function(){
-                      return grabDeets("Arizona")
-                    }
+                    "details": grabDeets("Arizona")
                 },
                 "AL": {
                     "fillKey": "Republican",
                     "electoralVotes": 32,
-                    details: function(){
-                      return grabDeets("Alabama")
-                    }
+                    "details": grabDeets("Alabama")
                 }
               },
               geographyConfig: {
                   popupTemplate: function(geo, data) {
-                    console.log("deeets" + data.details)
-                      return '<div class="hoverinfo"><strong> Number of things in ' + geo.properties.name +
-                              ': ' + data.electoralVotes +
-                              '</strong><p>Hey there: </p>'+ data.details +'</div>'
+                      return '<div class="hoverinfo"><strong>'
+                              + geo.properties.name +
+                              // ': ' + data.electoralVotes +
+                              '</strong><p>Percentage Women (ft1/total): </p>'+ data.details +'</div>'
 
                   }
               }

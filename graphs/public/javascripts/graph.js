@@ -3,7 +3,7 @@ console.log("hello")
 
 
 
-  d3.csv("./data/eeoc.csv", function(data){
+d3.csv("https://docs.google.com/a/propelworks.com/spreadsheets/d/e/2PACX-1vTyqqAHVeIiHFKZRFmtjNsH1O6kv5fOmYS-P2REaw7XJytKXS2229n1W9EqaOT6Vq4Dj0t8PryceK2F/pub?output=csv", function(data){
     console.log(data)
     // .rollup(function(d) {
     //  return d3.sum(d, function(g) {return g.FT1; }, function(g) {return g.TOTAL_UNIT; });
@@ -11,9 +11,12 @@ console.log("hello")
     var data = d3.nest()
        .key(function(d) { return d.STATE_LABEL;})
        .rollup(function(d) { return {
-         ft: d3.sum(d, function(g) { return g.FT1; }),
-         bl: d3.sum(d, function(g) { return g.BLKT1; }),
-         total: d3.sum(d, function(z) { return parseInt(z.MT1) + parseInt(z.FT1) })
+         ftS: d3.sum(d, function(g) { return g.FT1; }),
+         totalS: d3.sum(d, function(z) { return parseInt(z.TOTAL1) }),
+         ftT: d3.sum(d, function(g) { return g.FT10; }),
+         totalT: d3.sum(d, function(z) { return parseInt(z.TOTAL10) }),
+         ftM: d3.sum(d, function(g) { return g.FT1_2; }),
+         totalM: d3.sum(d, function(z) { return parseInt(z.TOTAL1_2) })
        }
      })
        .entries(data);
@@ -27,38 +30,73 @@ console.log("hello")
             data.forEach(function(d) {
               if(d.key.toString().toLowerCase()=== x.toString().toLowerCase()){
                 // console.log("k val - " + d.key)
-                var percentF = Math.round((d.values.ft/d.values.total) *100)
-                var percentA = Math.round((d.values.bl/d.values.total) *100)
-                  res.push(`${percentF}%`)
-                  res.push(`${percentA}%`)
+                var percentFS = Math.round((d.values.ftS/d.values.totalS) *100)
+                var percentFM = Math.round((d.values.ftM/d.values.totalM) *100)
+                var percentFT = Math.round((d.values.ftT/d.values.totalT) *100)
+                  res.push(`${percentFS}`)
+                  res.push(`${percentFM}`)
+                  res.push(`${percentFT}`)
                 }
               })
               return res
             };
 
+            var colorS;
 
-        var map = new Datamap({
-              element: document.getElementById('container'),
-              scope: "usa",
-              fills: {
-               'Republican': '#CC4731',
-               'Democrat': '#306596',
-               'Heavy Democrat': '#667FAF',
-               'Light Democrat': '#A9C0DE',
-               'Heavy Republican': '#CA5E5B',
-               'Light Republican': '#EAA9A8',
-               defaultFill: '#EDDC4E'
-              },
-              data: {
+            function gradient(x,y){
+              console.log("color x-" + x)
+              // var num = (x*50)/100
+              var num = (x-27)/30
+              var color = `rgba(250, 15, 160, ${num})`
+              console.log("c - " + num)
+              // return opacity = num
+              var rgb = RGBAtoRGB(30,144,255,num,255,255,255)
+               // console.log("rg first - " + RGBAtoRGB(250,15,160,num,255,255,255))
+               // console.log("y - " + y)
+
+               return $(`.datamaps-subunit.${y}`).attr("style",`fill:${rgb} !important`)
+
+              // return RGBAtoRGB(250,15,160,num,255,255,255)
+            }
+
+            function RGBAtoRGB(r, g, b, a, r2,g2,b2){
+              var r3 = Math.round(((1 - a) * r2) + (a * r))
+              var g3 = Math.round(((1 - a) * g2) + (a * g))
+              var b3 = Math.round(((1 - a) * b2) + (a * b))
+              // console.log("rgb("+r3+","+g3+","+b3+")")
+              colorS = "rgb("+r3+","+g3+","+b3+")"
+              return "rgb("+r3+","+g3+","+b3+")";
+            }
+            //
+
+
+            // var rgb = RGBAtoRGB(250,15,160,num,255,255,255)
+            // this.setAttribute("style", `fill:${rgb}`);
+            //
+            // $(this).setAttribute("style", `fill:${rgb}`);
+
+
+            // create color palette function
+            // color can be whatever you wish
+            // function gradient(x){
+            //   var num = x/100
+            //   var min = Math.min(num),
+            //    max =Math.max(num);
+            //   d3.scale.linear()
+            //           .domain([min,max])
+            //           .range(["#EFEFFF","#02386F"]);
+            // }
+
+            var series = {
                 "AZ": {
-                    "fillKey": "Republican",
+                  "fillKey": "Republican",
                     "electoralVotes": 5,
-                    "details": grabDeets("Arizona")
+                    "details": grabDeets("Arizona"),
                 },
                 "CO": {
                     "fillKey": "Light Democrat",
                     "electoralVotes": 5,
-                    "details": grabDeets("Colorado")
+                    "details": grabDeets("Colorado"),
                 },
                 "DE": {
                     "fillKey": "Democrat",
@@ -300,19 +338,49 @@ console.log("hello")
                     "electoralVotes": 32,
                     "details": grabDeets("Alabama")
                 }
+              }
+
+            console.log("colorS - " + colorS)
+        var map = new Datamap({
+              element: document.getElementById('container'),
+              scope: "usa",
+              fills: {
+               'Republican': '#CC4731',
+               'Democrat': '#306596',
+               'Heavy Democrat': '#667FAF',
+               'Light Democrat': '#A9C0DE',
+               'Heavy Republican': '#CA5E5B',
+               'Light Republican': '#EAA9A8',
+               // defaultFill: colorS
               },
+              data: series,
               geographyConfig: {
                   popupTemplate: function(geo, data) {
                       return '<div class="hoverinfo"><strong>'
                               + geo.properties.name +
                               // ': ' + data.electoralVotes +
-                              '</strong><p>Percentage Women (ft1/total): </p>'
+                              '</strong><p>Percentage Senior Mgmt: </p>'
                               + data.details[0] +
-                              '<p> African-American</p>' + data.details[1] + '</div>'
+                              '% <p> Percentage Mid Mgmt</p>' + data.details[1] +
+                              '% <p> Percentage Total Women</p>' + data.details[2] + '%</div>'
+
+                              // gradient(data.details[0],"AZ")
 
                   }
               }
           });
+
+
+          for (var key in series){
+            // console.log("hi" + key)
+              var abbr = key;
+            for(var prop in series[key])
+              if(prop === "details"){
+                // console.log("subkey" + series[key][prop])
+                var num = series[key][prop][2]
+                gradient(num, key)
+              }
+            }
 
 
 });

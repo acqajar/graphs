@@ -1,29 +1,18 @@
 {
   "name": "graphs",
-  "version": "1.0.0",
-  "description": "Graphs",
-  "main": "Y",
-  "dependencies": {},
-  "devDependencies": {},
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "test": "y"
+    "start": "node ./bin/www"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/acqajar/graphs.git"
-  },
-  "engines": {
-    "node": "4.8.4",
-    "npm": "3.9.5"
-  },
-  "keywords": [
-    "graphs",
-    "d3"
-  ],
-  "author": "Arsames Qajar",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/acqajar/graphs/issues"
-  },
-  "homepage": "https://github.com/acqajar/graphs#readme"
+  "dependencies": {
+    "@google-cloud/storage": "^1.5.1",
+    "body-parser": "~1.18.2",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "ejs": "~2.5.7",
+    "express": "~4.15.5",
+    "morgan": "~1.9.0",
+    "serve-favicon": "~2.4.5"
+  }
 }

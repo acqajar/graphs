@@ -355,6 +355,8 @@ d3.csv("https://docs.google.com/a/propelworks.com/spreadsheets/d/e/2PACX-1vTyqqA
               },
               data: series,
               geographyConfig: {
+                highlightFillColor: 'rgb(29,233,182)',
+                highlightBorderColor: 'rgb(29,233,182)',
                   popupTemplate: function(geo, data) {
                       return '<div class="hoverinfo"><strong>'
                               + geo.properties.name +
@@ -366,7 +368,7 @@ d3.csv("https://docs.google.com/a/propelworks.com/spreadsheets/d/e/2PACX-1vTyqqA
 
                               // gradient(data.details[0],"AZ")
 
-                  }
+                  },
               }
           });
 

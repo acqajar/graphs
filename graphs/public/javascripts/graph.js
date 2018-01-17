@@ -5,9 +5,17 @@ console.log("hello")
 
 d3.csv("https://docs.google.com/a/propelworks.com/spreadsheets/d/e/2PACX-1vTyqqAHVeIiHFKZRFmtjNsH1O6kv5fOmYS-P2REaw7XJytKXS2229n1W9EqaOT6Vq4Dj0t8PryceK2F/pub?output=csv", function(data){
     console.log(data)
+
+    var max1 = 0, min1 = 100
+    var maxArr = []
+
     // .rollup(function(d) {
     //  return d3.sum(d, function(g) {return g.FT1; }, function(g) {return g.TOTAL_UNIT; });
     // })
+    // var max = d3.max(data, function(d) { return +d.FT10;} );
+    // var min = d3.min(data, function(d) { return d.FT10; });
+    //
+
     var data = d3.nest()
        .key(function(d) { return d.STATE_LABEL;})
        .rollup(function(d) { return {
@@ -25,6 +33,7 @@ d3.csv("https://docs.google.com/a/propelworks.com/spreadsheets/d/e/2PACX-1vTyqqA
        console.log(data)
 
 
+
           function grabDeets(x){
             var res = []
             data.forEach(function(d) {
@@ -33,6 +42,16 @@ d3.csv("https://docs.google.com/a/propelworks.com/spreadsheets/d/e/2PACX-1vTyqqA
                 var percentFS = Math.round((d.values.ftS/d.values.totalS) *100)
                 var percentFM = Math.round((d.values.ftM/d.values.totalM) *100)
                 var percentFT = Math.round((d.values.ftT/d.values.totalT) *100)
+
+                max1 = percentFT > max1? percentFT: max1;
+                min1 = percentFT > min1? min1: percentFT
+                // console.log("inside max - " + max1 + " --- min -- "+ min1 + " - per - " + percentFT)
+                var arr =[x, percentFT]
+
+                  maxArr.push(arr)
+
+
+
                   res.push(`${percentFS}`)
                   res.push(`${percentFM}`)
                   res.push(`${percentFT}`)
@@ -41,14 +60,15 @@ d3.csv("https://docs.google.com/a/propelworks.com/spreadsheets/d/e/2PACX-1vTyqqA
               return res
             };
 
+
+
+
             var colorS;
 
             function gradient(x,y){
-              console.log("color x-" + x)
               // var num = (x*50)/100
               var num = (x-27)/30
               var color = `rgba(250, 15, 160, ${num})`
-              console.log("c - " + num)
               // return opacity = num
               var rgb = RGBAtoRGB(30,144,255,num,255,255,255)
                // console.log("rg first - " + RGBAtoRGB(250,15,160,num,255,255,255))
@@ -384,5 +404,10 @@ d3.csv("https://docs.google.com/a/propelworks.com/spreadsheets/d/e/2PACX-1vTyqqA
               }
             }
 
+            // console.log("final Max - " + max1 + " - min -" + min1)
+
+            // console.log("maxarr- " + maxArr.sort(function(a, b) {
+            //     return a[1] > b[1] ? -1 : 1;
+            // }))
 
 });
